@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="hex.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <h1 id="level"> </br> LEVEL EDITOR</h1>
+    <div id="left">
+        <div id="selekt" class="textpole">
+            Wybierz ilość pól
+            <select id="sel1">
+            </select>
+        </div>
+        <div id="field" class="textpole">
+            </br>FIELD CONTROL:</br>
+            <button id="walls" class="button">Walls</button></br>
+            <button id="enemy">Enemy</button></br>
+            <button id="treas">TREASURE</button></br>
+            <button id="light">LIGHT</button></br>
+        </div>
+        <div id="serv" class="textpole"></br> </br> </br>Load/Save</br>
+            <button id="save">Save data</button></br>
+            <button id="load">Load data</button></br>
+        </div>
+        <div class="textpole">
+            Nowe strony:
+            <button onclick="location.href='/Hex'" type="button">
+                Simple Hex</br></button>
+            <button onclick="location.href='/Game'" type="button">
+                Go to game</br></button>
+                <button onclick="location.href='/player'" type="button">
+                    Simple Player Movement</br></button>
+            <button onclick="location.href='/ally'" type="button">
+                Advanced player movement with ally's</br></button>
+            <button onclick="location.href='/particles'" type="button">
+                Flame controls</br></button>
+            <button onclick="location.href='/ognisko'" type="button">
+                Ognisko</br></button>
+                <button onclick="location.href='/GameFireplace'" type="button">
+                    Game with Fireplaces</br></button>
+                
+        </div>
+
+
+
+    </div>
+    <div id="right">
+
+    </div>
+    <div id="liczby">
+
+    </div>
+    <div id="tab"></div>
+    <script>
+        let tablex, datareceive;
+        $("#walls").on("click", function () {
+            typek = "walls"
+            zeruj();
+            $("#walls").css("border", "1px solid blue")
+        })
+        $("#enemy").on("click", function () {
+            typek = "Enemy";
+            zeruj();
+            $("#enemy").css("border", "1px solid blue")
+        })
+        $("#treas").on("click", function () {
+            typek = "TREASURE";
+            zeruj();
+            $("#treas").css("border", "1px solid blue");
+        })
+        $("#light").on("click", function () {
+            zeruj();
+            $("#light").css("border", "1px solid blue");
+            typek = "LIGHT"
+        })
+        $("#save").on("click", function () {
+            hexik.send(tabhex, tabhex.length);
+        })
+        $("#load").on("click", function () {
+            datareceive = hexik.receive(tabhex);
+            setTimeout(function () {
+                let which = 0;
+                for (let i = 0; i < datareceive.tab.length; i++) {
+                    let a = parseInt(datareceive.tab[i].DIRIN);
+                    let b = parseInt(datareceive.tab[i].DIROUT)
+                    let c = datareceive.tab[i].TYPE;
+                    let v = datareceive.tab[i].WHICH;
+                    let z = parseInt(datareceive.tab[i].POZX)
+                    let x = parseInt(datareceive.tab[i].POZY)
+                    tabhex[i].dirIn = a;
+                    tabhex[i].dirOut = b;
+                    tabhex[i].type = c;
+                    tabhex[i].which = v;
+                    tabhex[i].pozx = z;
+                    tabhex[i].pozy = x;
+
+                }
+                $("#liczby").html("")
+                $("#tab").html("")
+                tabhex.forEach(tab => {
+                    if (tab.dirIn != 0) {
+                        $("#tab").html($("#tab").html() + JSON.stringify(tab))
+                        var divek = $("<div>")
+                        divek.attr("class", "numerki")
+                        divek.html(tab.dirIn)
+                        divek.css("top", tab.pozx - 5)
+                        divek.css("left", tab.pozy + 12)
+                        $("#liczby").append(divek)
+
+                    }
+                })
+
+            }, 1000)
+
+        })
+        var which = 0;
+        var tabhex = [];
+        var hexik;
+        var idhex = 0;
+        let obj;
+        let typek = "wall";
+        let direk = 3;
+        $(document).ready(function () {
+            hexik = new Hex();
+        })
+        var sel = $("#sel1")
+        for (let x = 2; x < 10; x++) {
+            let optiona = $("<option>")
+            optiona.html(x)
+            optiona.val(x)
+            sel.append(optiona)
+        }
+
+        $("#sel1").on("change", function () {
+            $("#right").html(" ")
+            tabhex = []
+            idhex = 0;
+            var kile = -2;
+            for (let x = 0; x < $("#sel1").val(); x++) {
+
+                $("#right").append("<br>");
+                kile = kile + 1.5;
+                for (let j = 0; j < $("#sel1").val(); j++) {
+
+                    if (x % 2 == 0) {
+                        let div = $("<div>")
+                        div.attr("class", "divek")
+                        div.attr("id", idhex)
+                        div.css("left", 500 + (x * 92) + "px")
+                        div.css("top", (j * 102 + 250) + "px")
+                        div.on("click", function () {
+                            let x = hexik.handle($(this));
+                            // let y= hexik.handle($(this)).dirOut;    
+                            dirowanie(x);
+                            tabhex[$(this).attr("id")].dirIn = x;
+                            tabhex[$(this).attr("id")].dirOut = direk;
+                            tabhex[$(this).attr("id")].type = typek;
+                            tabhex[$(this).attr("id")].which = which;
+
+                            $("#liczby").html("")
+                            $("#tab").html("")
+                            tabhex.forEach(tab => {
+                                if (tab.dirIn != 0) {
+                                    $("#tab").html($("#tab").html() + JSON.stringify(tab))
+                                    var divek = $("<div>")
+                                    divek.attr("class", "numerki")
+                                    divek.html(tab.dirIn)
+                                    divek.css("top", tab.pozx - 5)
+                                    divek.css("left", tab.pozy + 12)
+                                    $("#liczby").append(divek)
+
+                                }
+                            })
+                            which++;
+
+                        })
+                        obj = {
+                            id: idhex,
+                            x: j,
+                            y: kile,
+                            dirIn: 0,
+                            dirOut: 4,
+                            type: typek,
+                            which: 0,
+                            pozy: 500 + (x * 92),
+                            pozx: (j * 102 + 250)
+                        }
+                        div.html("")
+                        $("#right").append(div)
+
+                    }
+                    else {
+
+                        let div = $("<div>")
+                        div.attr("class", "divek")
+                        div.attr("id", idhex)
+                        div.css("left", 500 + (x * 92) + "px")
+                        div.css("top", ((j * 102) + 50 + 250) + "px")
+                        obj = {
+                            id: idhex,
+                            x: j + 0.5,
+                            y: kile,
+                            dirIn: 0,
+                            dirOut: 4,
+                            type: typek,
+                            which: 0,
+                            pozy: 500 + (x * 92),
+                            pozx: ((j * 102) + 50 + 250)
+                        }
+                        div.on("click", function () {
+                            let x = hexik.handle($(this));
+                            dirowanie(x);
+                            tabhex[$(this).attr("id")].dirIn = x;
+                            tabhex[$(this).attr("id")].dirOut = direk;
+                            tabhex[$(this).attr("id")].type = typek;
+                            tabhex[$(this).attr("id")].which = which;
+                            $("#liczby").html("")
+                            $("#tab").html("")
+                            tabhex.forEach(tab => {
+                                if (tab.dirIn != 0) {
+                                    $("#tab").html($("#tab").html() + JSON.stringify(tab))
+                                    var divek = $("<div>")
+                                    divek.attr("class", "numerki")
+                                    divek.html(tab.dirIn)
+                                    divek.css("top", tab.pozx - 5)
+                                    divek.css("left", tab.pozy + 12)
+                                    $("#liczby").append(divek)
+
+                                }
+                            })
+                            which++;
+
+                        })
+                        div.html("")
+                        $("#right").append(div)
+                    }
+                    tabhex.push(obj)
+
+                    idhex++;
+
+                }
+            }
+            $("#liczby").html("")
+            $("#tab").html("")
+            tabhex.forEach(tab => {
+                if (tab.dirIn != 0) {
+                    console.log(tab)
+                    $("#tab").html($("#tab").html() + JSON.stringify(tab))
+                    var divek = $("<div>")
+                    divek.attr("class", "numerki")
+                    divek.html(tab.dirIn)
+                    divek.css("top", tab.pozx - 5)
+                    divek.css("left", tab.pozy + 12)
+                    $("#liczby").append(divek)
+
+                }
+            })
+        })
+
+        function dirowanie(x) {
+            switch (x) {
+                case 0:
+                    direk = 3;
+                    break;
+                case 1:
+                    direk = 4;
+                    break;
+                case 2:
+                    direk = 5;
+                    break;
+                case 3:
+                    direk = 6;
+                    break;
+                case 4:
+                    direk = 1;
+                    break;
+                case 5:
+                    direk = 2;
+                    break;
+                case 6:
+                    direk = 3;
+                    break;
+            }
+        }
+        function zeruj() {
+            $("#walls").css("border", "1px solid black");
+            $("#enemy").css("border", "1px solid black");
+            $("#treas").css("border", "1px solid black");
+            $("#light").css("border", "1px solid black");
+        }
+
+
+    </script>
+</body>
+
+</html>

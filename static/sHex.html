@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="libs/jq.js"></script>
+    <script src="threejs/three_97.js"></script>
+    <script src="js3D/Hex3D.js"></script>
+    <script src="js3D/Fire_Implement.js"></script>
+    <script src="js3D/Doors3D.js"></script>
+
+    <script src="js3D/light.js"></script>
+    <script src="js3D/allyModel.js"></script>
+    <script src="js3D/model3D.js"></script>
+    <script src="js3D/ring.js"></script>
+    <script src="js3D/OrbitControls.js"></script>
+    <script src="js3D/Settings.js"></script>
+
+
+    <style>
+        .display {
+            display: inline-block;
+        }
+    </style>
+    <script>
+
+        $(document).ready(function () {
+            var clickedVect = new THREE.Vector3(0, 0, 0);
+            var clickedVect2 = new THREE.Vector3(0, 0, 0);
+            var directionVect2 = new THREE.Vector3(0, 0, 0);
+            light = new Light()
+            doors = new Doors3D()
+            hex3D = new Hex3D()
+            settings = new Settings()
+
+            var directionVect = new THREE.Vector3(0, 0, 0);
+            var scene = new THREE.Scene();
+            var axes = new THREE.AxesHelper(1000)
+            scene.add(axes)
+            var raycaster = new THREE.Raycaster();
+            var mouseVector = new THREE.Vector2()
+            var camera = new THREE.PerspectiveCamera(
+                45,
+                window.innerWidth / window.innerHeight,
+                0.1,
+                10000
+            );
+
+            let hex = hex3D.drawHex(1, 5, "LIGHT")
+            scene.add(hex)
+            var lightpoint = light.getPointLightAlly();
+            scene.add(lightpoint)
+            lightpoint.position.y = 50;
+            lightpoint.position.set(0, 0, 0)
+            let geometry1 = new THREE.PlaneGeometry(1000, 1000, 5, 5);
+            let material1 = new THREE.MeshBasicMaterial({ color: 0x555555, side: THREE.DoubleSide });
+            var plane = new THREE.Mesh(geometry1, material1);
+            plane.position.set(0, 0, 0)
+            plane.rotation.x = Math.PI / 2;
+            scene.add(plane)
+
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            $("#root").append(renderer.domElement);
+            camera.position.set(100, 100, 100)
+            var orbitControl = new THREE.OrbitControls(camera, renderer.domElement);
+            orbitControl.addEventListener('change', function () {
+                renderer.render(scene, camera)
+            });
+            camera.lookAt(0, 0, 0);
+            renderer.setClearColor(0xffffff);
+            function render() {
+                requestAnimationFrame(render);
+                renderer.render(scene, camera);
+            }
+            render();
+        })
+
+    </script>
+</head>
+
+<body>
+
+    <div id="root">
+
+    </div>
+</body>
+
+</html>

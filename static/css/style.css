@@ -1,0 +1,61 @@
+body
+{
+    background: lightblue;
+}
+#menu{
+  height:1080px;
+  background-color: aqua;
+  width:100px;
+  margin:0;
+  padding:0;
+}
+.hexagon {
+    transform: rotate(90deg);
+    width: 100px; 
+    height: 57.74px;
+    background-color: #64C7CC;
+    margin: 28.87px 0;
+    z-index:2;
+  }
+  button{
+    margin-top:10px;
+    width:100%;
+  }
+  
+  .hexagon:before,
+  .hexagon:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    border-left: 50px solid transparent;
+    border-right: 50px solid transparent;
+  }
+  
+  .hexagon:before {
+    bottom: 100%;
+    border-bottom: 28.87px solid #64C7CC;
+  }
+  
+  .hexagon:after {
+    top: 100%;
+    width: 0;
+    border-top: 28.87px solid #64C7CC;
+  }
+  .arrow
+  {
+      position: relative;
+      transform: rotate(-90deg);
+      width:45px;
+      left:10px;
+      top:15px;
+  }
+  #selecthex_count
+  {
+    width: 100%;
+
+  }
+  .Button3D
+  {
+    color:red;
+  }
+ 

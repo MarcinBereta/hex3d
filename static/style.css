@@ -1,0 +1,77 @@
+#bt {
+    width: 100px;
+    height: 100px;
+    background-color: blanchedalmond;
+}
+
+.divek {
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+    line-height: 10px;
+    position: absolute;
+    text-align: center;
+    background-size: 100% 100%;
+    background-image: url("hex.png");
+}
+
+#tab {
+    width: 300px;
+}
+#left{
+    border: solid 1px black;
+    float: left;
+    display: block;
+    width: 400px;
+    height: 1200px;
+    
+}
+#level{
+    width: 100%;
+    background-color: aqua;
+    font-size: 50px;
+    text-align: center;
+    height: 200px;
+    margin: 0 auto;
+}
+#sel1{
+    width: 100%;
+    background-color: aquamarine;
+    height: 80%;
+}
+button{
+    width: 100%;
+    height: 80px;
+    background-color: chartreuse;
+}
+.textpole{
+    width: 100%;
+    height: 300px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color: black;
+    background-color: chartreuse;
+    margin-top: 10px;
+    font-size: 20px;
+}
+div{
+    margin-top: 5px;
+    margin-bottom: 5px;
+    text-align: center;
+}
+#selekt{
+    height: 50px;
+}
+#right{
+    float: left;
+    margin-top: 1000px;
+    display: block;
+}
+#tab{
+    float: right;
+    margin-right: 300px;
+}
+.numerki{
+    position: absolute;
+    size: 10px
+}
